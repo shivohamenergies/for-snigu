@@ -36,7 +36,7 @@
             margin-top: 20px;
             justify-content: center;
             align-items: center;
-            height: 100px; /* Space for buttons */
+            height: 100px;
         }
 
         button {
@@ -58,7 +58,7 @@
         #noBtn {
             background-color: #adb5bd;
             color: white;
-            position: relative; /* Starts relative so it's visible next to Yes */
+            position: relative;
         }
 
         .heart {
@@ -94,9 +94,9 @@
   <source src="ringtone.mp3" type="audio/mpeg">
 </audio>
 
-<h1>Snigu, Will You Be My Valentine? 💘</h1>
+<h1 id="mainHeading">Snigu, Will You Be My Valentine? 💘</h1>
 
-<div class="buttons">
+<div class="buttons" id="buttonContainer">
     <button id="yesBtn" onclick="celebrate()">Yes, obviously! 💖</button>
     <button id="noBtn" onmouseover="moveNoButton()">No 😢</button>
 </div>
@@ -104,20 +104,21 @@
 <script>
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
+    const bgMusic = document.getElementById('bgMusic');
     let yesScale = 1;
 
     function moveNoButton() {
-        // Switch to absolute so it can jump around
+        // Change to absolute on first hover
         noBtn.style.position = 'absolute';
         
+        // Move to random spot
         const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
         const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-
         noBtn.style.left = x + 'px';
         noBtn.style.top = y + 'px';
 
-        // Optional: Make Yes button grow as discussed!
-        yesScale += 0.15;
+        // Grow the Yes button
+        yesScale += 0.2;
         yesBtn.style.transform = `scale(${yesScale})`;
     }
 
@@ -131,8 +132,8 @@
         setTimeout(() => heart.remove(), 5000);
     }
 
-    // Start floating hearts immediately
-    setInterval(createHearts, 300);
+    // Gentle hearts background
+    setInterval(createHearts, 400);
 
     function createConfetti() {
         for (let i = 0; i < 100; i++) {
@@ -146,17 +147,21 @@
     }
 
     function celebrate() {
-        // Try to play music if it hasn't started
-        document.getElementById('bgMusic').play();
+        // Play music now that the user has interacted
+        bgMusic.play().catch(e => console.log("Audio play blocked until interaction"));
         
         createConfetti();
-        // Custom message for Snigu
-        document.body.innerHTML = `
-            <h1 style="font-size: 3rem;">YAY! Snigu is MY Valentine! ❤️🌹🥳</h1>
-            <div style="font-size: 5rem;">🥰</div>
-        `;
         
-        // Intensify hearts
+        // Update the screen
+        document.getElementById('mainHeading').innerHTML = "YAY! Snigu is MY Valentine! ❤️🌹🥳";
+        document.getElementById('buttonContainer').style.display = 'none';
+        
+        const kiss = document.createElement("div");
+        kiss.innerHTML = "🥰";
+        kiss.style.fontSize = "5rem";
+        document.body.appendChild(kiss);
+        
+        // Increase heart intensity
         setInterval(createHearts, 100);
     }
 </script>
